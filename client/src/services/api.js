@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "atozbackend.railway.internal";
+const API_BASE_URL = "atozbackend-production.up.railway.app";
 
 // ✅ Create Axios instance
 const api = axios.create({
