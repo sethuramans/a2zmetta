@@ -14,7 +14,7 @@ const CLOSING_HOURS = 20 * 1000;
 
 function RewardTimer({ userId }) {
   const dispatch = useDispatch();
-  const { points, timerStartedAt } = useSelector((state) => state.rewards);
+  const { points } = useSelector((state) => state.rewards);
   const [isRunning, setIsRunning] = useState(false);
   const [timeLeft, setTimeLeft] = useState(CLOSING_HOURS);
 
@@ -71,7 +71,7 @@ function RewardTimer({ userId }) {
     }, 1000); // check every second for accuracy
 
     return () => clearInterval(interval);
-  }, [isRunning, points]);
+  }, [isRunning, points, dispatch, lastTick, userId]);
 
   const handleStart = () => {
     const now = Date.now();

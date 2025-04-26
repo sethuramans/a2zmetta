@@ -59,6 +59,7 @@ function Home() {
                   href="https://www.coinmarketcap.com/"
                   class="cta"
                   target="_blank"
+                  rel="noopener noreferrer"
                 >
                   Explore Market Prices
                 </a>

@@ -66,7 +66,7 @@ const TaskList = () => {
 
                 <a
                   className="btn btn-info icon-btn mx-1"
-                  //href={recentLink}
+                  href='#'
                   onClick={() => window.open(recentLink, "_blank")}
                 >
                   <span className="bi bi-eye img-circle btn-glyphicon glyphicon text-info"></span>
