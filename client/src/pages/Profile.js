@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { useNavigate } from "react-router-dom";
 import {getProfile} from '../services/api';
+import Share from "../components/Share";
 
 import LogoutButton from "../components/LogoutButton";
 
@@ -37,6 +38,7 @@ const Dashboard = () => {
             <div className="col-md-12">
               <div className="profile-content">
                 <h2>Welcome {user.username}</h2>
+                {user && <Share user={user}/>}
                 {user && <LogoutButton />}
               </div>
             </div>
