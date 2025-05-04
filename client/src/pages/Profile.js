@@ -1,28 +1,25 @@
 import React, { useEffect, useState } from 'react';
 
+import { useSelector } from "react-redux";
+
 import { useNavigate } from "react-router-dom";
 import {getProfile} from '../services/api';
 import Share from "../components/Share";
 
 import LogoutButton from "../components/LogoutButton";
+import TelegramShare from '../components/ShareButton';
 
 const Dashboard = () => {
-  const [user, setUser] = useState(null);
+  //const [user, setUser] = useState(null);
+  const user = useSelector((state) => state.auth.user);
 
   const navigate = useNavigate();
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      getProfile()
-        .then(response => setUser(response.data.user))
-        .catch(error => {
-          console.error('Failed to load user data', error);
-          navigate('/');
-        });
-    } else {     
+    //const token = localStorage.getItem('token');
+    if (!user) { 
       navigate('/');
     }
-  }, [navigate]);
+  }, [user, navigate]);
 
   if (!user) return <div>Loading...</div>;
 
@@ -38,7 +35,8 @@ const Dashboard = () => {
             <div className="col-md-12">
               <div className="profile-content">
                 <h2>Welcome {user.username}</h2>
-                {user && <Share user={user}/>}
+                
+                {user && <TelegramShare user={user}/>}
                 {user && <LogoutButton />}
               </div>
             </div>

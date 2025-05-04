@@ -28,6 +28,8 @@ exports.telegramLogin = async (req, res) => {
         // User not found, register new user
         process.env.DEBUG === "Y" &&
           console.log("AuthController > Login: new user", telegramId, username);
+
+
         db.query(
           `INSERT INTO ${dbTables.USER} (telegram_id, username) VALUES (?, ?)`,
           [telegramId, username],
@@ -35,6 +37,7 @@ exports.telegramLogin = async (req, res) => {
             
         process.env.DEBUG === "Y" &&
         console.log("AuthController > Login: new user Error", err);
+        
             if (err) return res.status(500).json({ error: 'Error saving user' });
 
             
