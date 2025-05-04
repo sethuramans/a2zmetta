@@ -1,4 +1,4 @@
-export const API_BASE_URL = "http://localhost:5000/api";
+export const API_BASE_URL = "https://atozbackend-production.up.railway.app/api";
 export const storage = {
     USER: 'user',
     TOKEN: 'token',
@@ -6,5 +6,5 @@ export const storage = {
 };
 
 export const BOT = {
-    USER_NAME: 'Atozmetta'
+    USER_NAME: 'Atozmetta_bot'
 };
