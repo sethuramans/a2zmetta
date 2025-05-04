@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../config/db');
+const {dbtables} = require('../utils/constants');
 
 // Login via Telegram
 exports.telegramLogin = async (req, res) => {
@@ -11,7 +12,7 @@ exports.telegramLogin = async (req, res) => {
   process.env.DEBUG === 'Y' && console.log(`AuthController > Login: telegram_id ${telegramId}, username ${username}`);
   try {
     // Check if the user exists
-    db.query('SELECT * FROM users WHERE telegram_id = ?', [telegramId], (err, results) => {
+    db.query(`SELECT * FROM ${dbtables.USER} WHERE telegram_id = ?`, [telegramId], (err, results) => {
       process.env.DEBUG === 'Y' && console.log('AuthController > Login: , hasResults', err, results.length);
       if (err) return res.status(500).json({ error: 'Database error' });
 
@@ -28,7 +29,7 @@ exports.telegramLogin = async (req, res) => {
         process.env.DEBUG === "Y" &&
           console.log("AuthController > Login: new user", telegramId, username);
         db.query(
-          'INSERT INTO users (telegram_id, username) VALUES (?, ?)',
+          `INSERT INTO ${dbtables.USER} (telegram_id, username) VALUES (?, ?)`,
           [telegramId, username],
           (err, result) => {
             

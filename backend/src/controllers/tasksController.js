@@ -1,6 +1,7 @@
 const express = require("express");
 const db = require('../config/db');
 
+const {dbtables} = require('../utils/constants');
 
 // ✅ Get the list of tasks
 exports.list = async (req, res) => {
@@ -16,8 +17,8 @@ exports.list = async (req, res) => {
   try {
     //const query = "SELECT * FROM tasks WHERE is_disabled = 'N' ORDER BY seq ASC";
   const query = `
-  SELECT t.id, t.title, t.url, t.action_text as btnText, ta.action FROM tasks as t LEFT JOIN tasks_actions AS ta ON t.id = ta.task_id AND ta.user_id = ? WHERE t.is_disabled = 'N' ORDER BY t.seq ASC;
-  SELECT t.* FROM tasks_links t JOIN ( SELECT task_id, MAX(created_on) AS latest FROM tasks_links GROUP BY task_id ) r ON t.task_id= r.task_id AND t.created_on = r.latest;
+  SELECT t.id, t.title, t.url, t.action_text as btnText, ta.action FROM ${dbtables.TASKS} as t LEFT JOIN ${dbtables.TASKS_ACTION} AS ta ON t.id = ta.task_id AND ta.user_id = ? WHERE t.is_disabled = 'N' ORDER BY t.seq ASC;
+  SELECT t.* FROM ${dbtables.TASKS_LINKS} t JOIN ( SELECT task_id, MAX(created_on) AS latest FROM ${dbtables.TASKS_LINKS} GROUP BY task_id ) r ON t.task_id= r.task_id AND t.created_on = r.latest;
   `;
    db.query(query, [userId], (err, results) => {
       if (err) return res.status(500).json({ error: 'Error returning tasks list', err });
