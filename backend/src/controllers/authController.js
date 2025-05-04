@@ -12,18 +12,21 @@ exports.telegramLogin = async (req, res) => {
   try {
     // Check if the user exists
     db.query('SELECT * FROM users WHERE telegram_id = ?', [telegramId], (err, results) => {
-      process.env.DEBUG === 'Y' && console.log('AuthController > Login: Error', err);
+      process.env.DEBUG === 'Y' && console.log('AuthController > Login: , hasResults', err, results.length);
       if (err) return res.status(500).json({ error: 'Database error' });
 
       if (results.length > 0) {
         // User found, generate token
         const user = results[0];
+        process.env.DEBUG === 'Y' && console.log('AuthController > Login: has user', user.id);
         const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, {
           expiresIn: '365d',//'1h',
         });
         res.status(200).json({ message: 'Login successful', token, user });
       } else {
         // User not found, register new user
+        process.env.DEBUG === "Y" &&
+          console.log("AuthController > Login: new user", telegramId, username);
         db.query(
           'INSERT INTO users (telegram_id, username) VALUES (?, ?)',
           [telegramId, username],
