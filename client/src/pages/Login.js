@@ -23,21 +23,21 @@ import {loginUser} from '../services/api';
           console.log("Telegram user  found");
            user = {
              telegramId: teleUser.id,
-             firstname: teleUser.first_name,
-             lastname: teleUser.last_name,
-             username: teleUser.username,
-             photoUrl: teleUser.photo_url,
+             firstname: teleUser.first_name || "",
+             lastname: teleUser.last_name || "",
+             username: teleUser.username || teleUser.id,
+             photoUrl: teleUser.photo_url || "",
            };
         } else {
+          
+          console.log("Telegram user not found, Might be a website access");
            user = {
-            
-          telegramId: 12345678,
-          firstname: 'Anonymous',
-          lastname: 'user',
-          username: 'anonymous',
-          photoUrl: '',
-          }
-
+             telegramId: 12345678,
+             firstname: "Anonymous",
+             lastname: "user",
+             username: "anonymous",
+             photoUrl: "",
+           };
         }
 
 
