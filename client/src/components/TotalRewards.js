@@ -15,7 +15,7 @@ const TotalRewards = () => {
   if (!user) return <div>Loading...</div>;
   return (
     <div>
-      <span>Rewards:</span> <h4>{totalRewards}</h4>
+      <span>Rewards:</span> <h4>{totalRewards || '0'}</h4>
     </div>
   );
 };
