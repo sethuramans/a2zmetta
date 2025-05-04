@@ -1,7 +1,7 @@
 const express = require("express");
 const db = require('../config/db');
 
-const {dbtables} = require('../utils/constants');
+const dbTables = require('../utils/constants/dbTables');
 
 // ✅ Save reward points in the database
 exports.save = async (req, res) => {
@@ -12,7 +12,7 @@ exports.save = async (req, res) => {
   }
 
   try {
-  const query = `INSERT INTO ${dbtables.REWARDS} (user_id, points, reason, updated_at) VALUES (?, ?, ?, NOW())`;
+  const query = `INSERT INTO ${dbTables.REWARDS} (user_id, points, reason, updated_at) VALUES (?, ?, ?, NOW())`;
    db.query(query, [userId, points, reason], (err, result) => {
       if (err) return res.status(500).json({ error: 'Error saving rewards' });
       res.status(200).json({ message: "Points saved successfully!", result });
@@ -32,7 +32,7 @@ exports.getTotalRewards = async (req, res) => {
   }
 
   try {
-  const query = `SELECT SUM(points) AS totalRewards FROM ${dbtables.REWARDS} where user_id = ?`;
+  const query = `SELECT SUM(points) AS totalRewards FROM ${dbTables.REWARDS} where user_id = ?`;
    db.query(query, [userId], (err, result) => {
       if (err) return res.status(500).json({ error: 'Error returning total points' });
       

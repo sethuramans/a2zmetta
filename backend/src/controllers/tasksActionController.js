@@ -1,5 +1,5 @@
 const db = require('../config/db');
-const {dbtables} = require('../utils/constants');
+const dbTables = require('../utils/constants/dbTables');
 
 
 exports.save = async (req, res) => {
@@ -7,7 +7,7 @@ exports.save = async (req, res) => {
 
   process.env.DEBUG === 'Y' && console.log(`TasksAction controller > save: userid ${userId}, tasksid ${taskId}`);
   try {
-    db.query(`INSERT INTO ${dbtables.TASKS_ACTION} (user_id, task_id, action) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE action = VALUES(action)`, [userId, taskId, action], (err, results) => {
+    db.query(`INSERT INTO ${dbTables.TASKS_ACTION} (user_id, task_id, action) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE action = VALUES(action)`, [userId, taskId, action], (err, results) => {
       process.env.DEBUG === 'Y' && console.log('TasksAction controller > retrieve: Error', err);
       if (err) return res.status(500).json({ error: 'Database error' });
       res.status(200).json({ message: 'Tasks action updated successful'});
@@ -22,7 +22,7 @@ exports.list = async(req, res) => {
     const { userid = 0 } = req.body;
     process.env.DEBUG === 'Y' && console.log(`TasksAction controller > list: userid ${userid}`);
     try {
-      db.query(`SELECT * FROM ${dbtables.TASKS_ACTION} WHERE user_id = ?`, [userid], (err, results) => {
+      db.query(`SELECT * FROM ${dbTables.TASKS_ACTION} WHERE user_id = ?`, [userid], (err, results) => {
         process.env.DEBUG === 'Y' && console.log('TasksAction controller > retrieve: Error', err);
         if (err) return res.status(500).json({ error: 'Database error' });
         const tasksAction = res;
