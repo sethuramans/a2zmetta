@@ -14,7 +14,39 @@ import {loginUser} from '../services/api';
     const _loginUser = async () => {
       
       try {
-        if (!window.Telegram) {
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+  
+        const teleUser = tg.initDataUnsafe?.user;
+        let user = {};
+        if (teleUser) {
+          console.log("Telegram user  found");
+           user = {
+             telegramId: teleUser.id,
+             firstname: teleUser.first_name,
+             lastname: teleUser.last_name,
+             username: teleUser.username,
+             photoUrl: teleUser.photo_url,
+           };
+        } else {
+           user = {
+            
+          telegramId: 12345678,
+          firstname: 'Anonymous',
+          lastname: 'user',
+          username: 'anonymous',
+          photoUrl: '',
+          }
+
+        }
+
+
+
+        
+
+
+
+       /* if (!window.Telegram) {
           window.Telegram = { WebApp: {} };
         }
     
@@ -26,8 +58,8 @@ import {loginUser} from '../services/api';
               username: "sethuramancbe",
             },
           };
-        }
-        const response = await loginUser( window.Telegram.WebApp.initData);
+        }*/
+        const response = await loginUser({ user });
         console.log('_loginUser response', response);
         dispatch(login(response));
         navigate("/dashboard");
