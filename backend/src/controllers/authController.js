@@ -31,10 +31,16 @@ exports.telegramLogin = async (req, res) => {
           'INSERT INTO users (telegram_id, username) VALUES (?, ?)',
           [telegramId, username],
           (err, result) => {
+            
+        process.env.DEBUG === "Y" &&
+        console.log("AuthController > Login: new user Error", err);
             if (err) return res.status(500).json({ error: 'Error saving user' });
 
             
             const uniqueId = result.insertId;
+            
+        process.env.DEBUG === "Y" &&
+          console.log("AuthController > Login: new user id", uniqueId);
             const user = {
 
               id: uniqueId,
@@ -43,7 +49,7 @@ exports.telegramLogin = async (req, res) => {
             };
             // Generate token for new user
             const token = jwt.sign({ id: uniqueId, username }, process.env.JWT_SECRET, {
-              expiresIn: '1h',
+              expiresIn: '365d',
             });
             res.status(201).json({ message: 'User registered successfully', token, user });
           }
