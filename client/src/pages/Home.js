@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import ReferralForm from '../components/ReferralForm';
 
 function Home() {
   
@@ -64,14 +65,16 @@ function Home() {
                   Explore Market Prices
                 </a>
               </div>
-              {!user && (
+              
+              {!user && <ReferralForm />}
+              {/*!user && (
                 <Link
                   to="/login"
                   className="btn btn-primary d-block mx-auto my-2"
                 >
                   Login
                 </Link>
-              )}
+              )*/}
             </div>
           </div>
         </div>

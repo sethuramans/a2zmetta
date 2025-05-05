@@ -6,7 +6,7 @@ const TelegramShare = ({user}) => {
 
   const botUsername = BOT.USER_NAME; // 🔁 Replace with your bot's username
   const startParam = user?.telegram_id; // Optional: customize for tracking/referrals
-  const shareUrl = `https://t.me/${botUsername}?startapp=${startParam}`;
+  const shareUrl = `https://t.me/${botUsername}?referral_code=${startParam}`;
 
   useEffect(() => {
     if (window.Telegram?.WebApp) {

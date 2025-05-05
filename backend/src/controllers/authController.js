@@ -7,7 +7,7 @@ const dbTables = require('../utils/constants/dbTables');
 exports.telegramLogin = async (req, res) => {
   const { user = {} } = req.body;
   //const {user = {}} = initData;
-  const {telegramId, username} = user;
+  const {telegramId, username, referredBy = 0} = user;
 
   process.env.DEBUG === 'Y' && console.log(`AuthController > Login: telegram_id ${telegramId}, username ${username}`);
   try {
@@ -31,8 +31,8 @@ exports.telegramLogin = async (req, res) => {
 
 
         db.query(
-          `INSERT INTO ${dbTables.USER} (telegram_id, username) VALUES (?, ?)`,
-          [telegramId, username],
+          `INSERT INTO ${dbTables.USER} (telegram_id, username, referred_by) VALUES (?, ?)`,
+          [telegramId, username, referredBy],
           (err, result) => {
             
         process.env.DEBUG === "Y" &&
