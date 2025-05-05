@@ -2,6 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { getTotalRewardsEarned } from '../services/api';
 
+const REWARDS_POINTS = 5;
+
 const rewardsSlice = createSlice({
   name: 'rewards',
   initialState: {
@@ -14,7 +16,7 @@ const rewardsSlice = createSlice({
       state.points = action.payload;
     },
     incrementPoints: (state) => {
-      state.points += 5;
+      state.points += REWARDS_POINTS;
     },
     resetPoints: (state) => {
       state.points = 0;

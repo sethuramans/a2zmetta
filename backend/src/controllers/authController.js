@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../config/db');
 const dbTables = require('../utils/constants/dbTables');
+const REFERRAL_POINTS = 10;
 
 // Login via Telegram
 exports.telegramLogin = async (req, res) => {
@@ -34,28 +35,52 @@ exports.telegramLogin = async (req, res) => {
           `INSERT INTO ${dbTables.USER} (telegram_id, username, referred_by) VALUES (?, ?)`,
           [telegramId, username, referredBy],
           (err, result) => {
-            
-        process.env.DEBUG === "Y" &&
-        console.log("AuthController > Login: new user Error", err);
-        
-            if (err) return res.status(500).json({ error: 'Error saving user' });
+            process.env.DEBUG === "Y" &&
+              console.log("AuthController > Login: new user Error", err);
 
-            
+            if (err)
+              return res.status(500).json({ error: "Error saving user" });
+
             const uniqueId = result.insertId;
-            
-        process.env.DEBUG === "Y" &&
-          console.log("AuthController > Login: new user id", uniqueId);
-            const user = {
 
+            process.env.DEBUG === "Y" &&
+              console.log("AuthController > Login: new user id", uniqueId);
+            const user = {
               id: uniqueId,
               username: username,
-              telegram_id: telegramId
+              telegram_id: telegramId,
             };
             // Generate token for new user
-            const token = jwt.sign({ id: uniqueId, username }, process.env.JWT_SECRET, {
-              expiresIn: '365d',
-            });
-            res.status(201).json({ message: 'User registered successfully', token, user });
+            const token = jwt.sign(
+              { id: uniqueId, username },
+              process.env.JWT_SECRET,
+              {
+                expiresIn: "365d",
+              }
+            );
+            if (referredBy && referredBy !== telegramId) {
+              const [referrer] = db.query(
+                `SELECT * FROM ${dbTables.USER} WHERE telegram_id = ?`,
+                [referredBy]
+              );
+
+
+              db.query(
+                `INSERT INTO ${dbTables.REWARDS} (user_id, points, reason)
+                 VALUES (?, ?, 'referral')`,
+                [referrer.id, REFERRAL_POINTS],
+                (rewardErr) => {
+                  if (rewardErr) {
+                    process.env.DEBUG === "Y" &&
+                      console.log("Reward update failed:", rewardErr);
+                    // You can continue even if rewards update fails
+                  }
+                }
+              );
+            }
+            res
+              .status(201)
+              .json({ message: "User registered successfully", token, user });
           }
         );
       }
