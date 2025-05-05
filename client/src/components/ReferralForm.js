@@ -20,7 +20,7 @@ const ReferralForm = () => {
     const teleUser = initData?.user;
     let _user = {};
     if (teleUser) {
-      const _referredBy = initData?.referral_code;
+      const _referredBy = initData?.start_param;
       console.log("Telegram user  found");
       _user = {
         telegramId: teleUser.id,
