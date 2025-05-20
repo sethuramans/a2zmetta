@@ -1,5 +1,8 @@
 import axios from "axios";
-import { API_BASE_URL } from "../utils/constants";
+import { API_BASE_URL, STORAGE } from "../utils/constants";
+const { TOKEN } = STORAGE;
+
+
 // ✅ Create Axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -9,15 +12,44 @@ const api = axios.create({
   }
 });
 
+
 // ✅ Attach JWT token to every request
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem(TOKEN);
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
+    console.log('Request config:', config); // Log the config before sending
+    return config;
+  },
+  (error) => {
+    console.error('Request error:', error); // Log request errors
+    return Promise.reject(error);
+  }
+);
+
+api.interceptors.response.use(
+  (response) => {
+    console.log('Response received:', response); // Log the response
+    return response;
+  },
+  (error) => {
+    console.error('Response error:', error); // Log response errors
+    return Promise.reject(error);
+  }
+);
+
+/*
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem(TOKEN) || null;
     //const user = localStorage.getItem("user");
     if (token) {
       config.headers["Authorization"] = `${token}`;
     }
     
+    console.log('Api.js interceptors', config.headers);
     /*if (user) {
       console.log('api.interceptors.request', user, config);
       const {id: userId} = JSON.parse(user);
@@ -38,10 +70,10 @@ api.interceptors.request.use(
       
       console.log('api.interceptors.request after',config);
     }*/
-    return config;
+    /*return config;
   },
   (error) => Promise.reject(error)
-);
+);*/
 
 
 // ✅ Store token in localStorage
@@ -56,7 +88,7 @@ api.interceptors.request.use(
 };*/
 
 // ✅ User Registration (Signup)
-export const registerUser = (userData) => api.post("/register", userData);
+export const registerUser = (userData) => api.post("/auth/register", userData);
 
 // ✅ User Login (Receive JWT Token)
 export const loginUser = (userData) =>

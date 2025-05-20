@@ -3,15 +3,22 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import {getTasks} from '../services/api';
 // Async thunk to fetch tasks from DB
-export const fetchTasks = createAsyncThunk('tasks/fetchTasks', async () => {
-  try {
-  const res = await getTasks();
-  console.log("taskslice fetchtasks", res);
-  return res;
-} catch (error) {
-    throw Error('Error fetching tasks:', error);
+export const fetchTasks = createAsyncThunk(
+  'tasks/fetchTasks',
+  async (_, thunkAPI) => {
+    try {
+      const res = await getTasks();
+      console.log("✅ taskSlice fetchTasks response:", res);
+      return res; // Should contain { tasks, tasks_links }
+    } catch (error) {
+      console.error("❌ Error fetching tasks:", error);
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || 'Error fetching tasks'
+      );
+    }
   }
-});
+);
+
 
 
 const initialState = {

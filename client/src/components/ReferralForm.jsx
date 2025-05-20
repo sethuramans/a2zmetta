@@ -50,9 +50,10 @@ const ReferralForm = () => {
 
   if (!referralCode)
     return (
-      <Link to="/login" className="btn btn-primary d-block mx-auto my-2">
+      <div><Link to="/login" className="btn btn-primary d-block mx-auto my-2">
         Login
       </Link>
+      </div>
     );
   return (
     <div>

@@ -1,15 +1,28 @@
 // src/components/TaskList.js
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchTasks } from "../store/taskslice";
+import { fetchTasks } from "../store/taskSlice";
 import {saveTaskActions} from '../services/api';
-
+import Loader from "./Loader";
+import {getTasks} from '../services/api';
 const TaskList = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { tasks, loading, error, tasks_links } = useSelector((state) => state.tasks);
   //const  task_links  = useSelector((state) => state.tasks_links);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await getTasks();
+        console.log('Tasks:', res); // Check if data is returned
+      } catch (err) {
+        console.error('Error:', err);
+      }
+    };
+  
+    fetchData();
+  }, []);
 
   useEffect(() => {
     dispatch(fetchTasks());
@@ -29,7 +42,7 @@ const TaskList = () => {
 
   console.log(tasks, tasks_links);
 
-  if (loading) return <p>Loading tasks...</p>;
+  if (loading) return <Loader message='Loading tasks...'/>;
   if (error) return <p>Error: {error}</p>;
   return (
     <div style={{ maxWidth: 600, margin: "30px auto" }} id='task-list'>

@@ -1,12 +1,11 @@
 import React from "react";
+import Header from "../components/Header";
 
 function AboutUs() {
   return (
     <section id="aboutus" className="py-2  min-vh-100 main-section">
       <div className="container-fluid">
-        <div className="banner-img">
-          <h2 className="text-center mb-4 text-white">About Us</h2>
-        </div>
+        <Header title='About Us'/>
         <div className="content">
           <div className="row align-items-center">
             <p>

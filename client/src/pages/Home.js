@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from "react-redux";
 import ReferralForm from '../components/ReferralForm';
+import Header from "../components/Header";
 
 function Home() {
   
@@ -8,9 +9,7 @@ function Home() {
   return (
     <section id="home" className="py-2  min-vh-100 main-section">
       <div className="container-fluid">
-        <div className="banner-img">
-          <h2 className="text-center mb-4 text-white">AtoZ Metta</h2>
-        </div>
+      <Header title='Atoz Metta'/>
         <div className="content">
           <div className="row">
             <div className="col-md-12">

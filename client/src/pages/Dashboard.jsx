@@ -44,44 +44,42 @@ import Header from "../components/Header";
 
 function Dashboard() {
   const user = useSelector((state) => state.auth.user);
-  console.log("Dashboard", user);
+  console.log("Dashboard", user, user.username);
   return (
-    <section id="dashboard" className="py-2  min-vh-100 main-section">
-      <div className="container-fluid">
-        <Header title="Dashboard" />
-        <div className="content">
-          <div className="row ">
-            <div className="col-md-12">
-              <div className="user-details">
-                <div>
-                  Welcome, <h3>{user?.username}!</h3>
-                </div>
+    <div id="dashboard" className="">
+      <Header title="Dashboard" />
+      <div className="main-content container">
+        <div className="row ">
+          <div className="col-md-12 col-lg-6">
+            <div className="user-details">
+              <div>
+                Welcome, <h3>{user?.username}!</h3>
               </div>
-              <div className="rewards-section">
-                <div className="rewards-inner-wrap">
-                  <div className="rewards-earned">
-                    <div className="icon">
-                      <span className="bi bi-award"></span>
-                    </div>
-                    <div className="info">
-                      <TotalRewardsEarned />
-                    </div>
+            </div>
+            <div className="rewards-section">
+              <div className="rewards-inner-wrap">
+                <div className="rewards-earned">
+                  <div className="icon">
+                    <span className="bi bi-award"></span>
                   </div>
-
-                  <hr />
-                  {user && (
-                    <div className="rewards-mining">
-                      <RewardsTimer userId={user?.id} />
-                      {/*<Timer userId={user?.id} />*/} {/* ✅ Pass User ID */}
-                    </div>
-                  )}
+                  <div className="info">
+                    <TotalRewardsEarned />
+                  </div>
                 </div>
+
+                <hr />
+                {user && (
+                  <div className="rewards-mining">
+                    <RewardsTimer userId={user?.id} />
+                    {/*<Timer userId={user?.id} />*/} {/* ✅ Pass User ID */}
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 

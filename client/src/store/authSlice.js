@@ -1,6 +1,97 @@
-import { createSlice } from "@reduxjs/toolkit";
-import {storage} from '../utils/constants';
-const { USER, TOKEN, REWARD_START_TIME } = storage;
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { loginUser, registerUser } from '../services/api';
+import {STORAGE} from '../utils/constants';
+const { USER, TOKEN, REWARD_START_TIME } = STORAGE;
+
+
+
+
+// Async Thunks
+export const login = createAsyncThunk('auth/login', async (data, thunkAPI) => {
+  try {
+    const res = await loginUser(data);
+    console.log('sethu log authslice login', res);
+    localStorage.setItem(USER, JSON.stringify(res.user))
+    localStorage.setItem(TOKEN, res.token);
+    return res; // should be { token, user }
+  } catch (err) {
+    const message = err.response?.data?.message || err.message || 'Login failed';
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+export const register = createAsyncThunk('auth/register', async (data, thunkAPI) => {
+  try {
+    const res = await registerUser(data);
+    return res.data;
+  } catch (err) {
+    const message = err.response?.data?.message || err.message || 'Registration failed';
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+const getUserData = () => localStorage.getItem(USER) ?? null;
+const getToken = () => localStorage.getItem(TOKEN) ?? null;
+const user = JSON.parse(getUserData());
+
+
+// Initial State
+const initialState = {
+  user: user && Object.keys(user).length > 0 ? user : null,
+  token: getToken(),
+  loading: false,
+  error: null,
+};
+
+// Slice
+const authSlice = createSlice({
+  name: 'auth',
+  initialState,
+  reducers: {
+    logout: (state) => {
+      localStorage.removeItem(TOKEN);
+      localStorage.removeItem(USER);
+      state.user = null;
+      state.token = null;
+      state.error = null;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(login.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        console.log('authslice extra fullfilled', action);
+        state.loading = false;
+        state.user = action.payload?.user || null;
+        state.token = action.payload?.token || null;
+        state.error = null;
+      })
+      .addCase(login.rejected, (state, action) => {
+        console.log('authslice extra rejected', action);
+        state.loading = false;
+        state.user = null;
+        state.token = null;
+        state.error = action.payload || 'Login failed';
+      })
+      .addCase(register.fulfilled, (state, action) => {
+        state.user = action.payload?.user || null;
+        state.error = null;
+      })
+      .addCase(register.rejected, (state, action) => {
+        state.error = action.payload || 'Registration failed';
+      });
+  },
+});
+
+export const { logout } = authSlice.actions;
+export default authSlice.reducer;
+
+/*import { createSlice } from "@reduxjs/toolkit";
+import {STORAGE} from '../utils/constants';
+const { USER, TOKEN, REWARD_START_TIME } = STORAGE;
 
 // ✅ Use an empty object `{}` if `user` is missing
 
@@ -37,4 +128,4 @@ const authSlice = createSlice({
 });
 
 export const { login, logout } = authSlice.actions;
-export default authSlice.reducer;
+export default authSlice.reducer;*/
