@@ -7,9 +7,9 @@ router.post('/webhook', async (req, res) => {
     if (!msg || !msg.from) return res.sendStatus(200);
 
     const telegramId = msg.from.id;
-    const firstName = msg.from.first_name || '';
+    const displayname = msg.from.first_name || '';
     const lastName = msg.from.last_name || '';
-    const name = `${firstName}_${lastName}`.trim();
+    const name = `${displayname}_${lastName}`.trim();
     const text = msg.text;
 
     if (text.startsWith('/start')) {
@@ -31,8 +31,8 @@ router.post('/webhook', async (req, res) => {
 
             // Insert user
             const [result] = await db.query(
-                "INSERT INTO users (telegram_id, username, firstname, referral_code, referred_by) VALUES (?, ?, ?, ?)",
-                [telegramId, name,  firstName, userReferralCode, referredBy]
+                "INSERT INTO users (telegram_id, username, displayname, referral_code, referred_by) VALUES (?, ?, ?, ?)",
+                [telegramId, name,  displayname, userReferralCode, referredBy]
             );
 
             // Reward referrer

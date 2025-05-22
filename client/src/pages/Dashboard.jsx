@@ -53,7 +53,7 @@ function Dashboard() {
           <div className="col-md-12 col-lg-6">
             <div className="user-details">
               <div>
-                Welcome, <h3>{user?.username}!</h3>
+                Welcome, <h3>{user?.displayname || user.username}!</h3>
               </div>
             </div>
             <div className="rewards-section">

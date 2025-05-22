@@ -137,13 +137,14 @@ const NavbarMenu = () => {
                 </NavLink>
                 {user?.id && (
                   <>
-                    <NavLink className={linkClass} to="/dashboard">
-                      <i className="bi bi-grid"></i>
-                      <p>Dashboard</p>
-                    </NavLink>
+                   
                     <NavLink className={linkClass} to="/profile">
                       <i className="bi bi-person"></i>
                       <p> Profile</p>
+                    </NavLink>
+                    <NavLink className={linkClass} to="/wallet">
+                      <i className="bi bi-wallet2"></i>
+                      <p>Wallet</p>
                     </NavLink>
                     <NavLink className={linkClass} to="/tasks">
                       <i className="bi bi-list-task"></i>

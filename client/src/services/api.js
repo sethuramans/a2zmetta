@@ -100,6 +100,23 @@ export const loginUser = (userData) =>
 // ✅ Get Profile
 export const getProfile = () => api.get("/profile");
 
+
+// ✅ Save Profile
+export const updateUserProfile = (data) =>
+  api.post("/user/save", data).then((res) => {
+    return res.data;
+  });
+
+// ✅ Get Friends List
+export const getFriends = (page, limit) =>
+  api.get("/user/friends", {
+    params: {
+      page,
+      limit,
+    },
+  });
+
+
 // ✅ Get Total rewards earned
 export const getTotalRewardsEarned = () => api.get("/rewards/total");
 

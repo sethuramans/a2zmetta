@@ -24,7 +24,7 @@ const ReferralForm = () => {
       console.log("Telegram user  found");
       _user = {
         telegramId: teleUser.id,
-        firstname: teleUser.first_name || "",
+        displayname: teleUser.first_name || "",
         lastname: teleUser.last_name || "",
         username: teleUser.username || teleUser.id,
         photoUrl: teleUser.photo_url || "",

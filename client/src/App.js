@@ -9,7 +9,9 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Tasks from "./pages/Tasks";
 import AboutUs from './pages/AboutUs';
+import ProfileUpdate from './pages/ProfileEditPage';
 import PageNotFound from './pages/PageNotFound';
+import Wallet from "./pages/Wallet";
 import ThemeToggle from './components/ThemeToggle';
 const PrivateRoute = ({ children }) => {
   const token = useSelector((state) => state.auth.token);
@@ -21,7 +23,7 @@ const AppRoutes = () => {
   const theme = useSelector((state) => {console.log(state);return state.theme.mode});
   const hideNavbarOn = ['/logins'];
   const shouldHideNavbar = hideNavbarOn.includes(location.pathname);
-  const formPage = ['/login', '/register'];
+  const formPage = ['/login', '/register', '/profile/update'];
   const isFormPage = formPage.includes(location.pathname);
  return (
    <div
@@ -47,11 +49,24 @@ const AppRoutes = () => {
              </PrivateRoute>
            }
          />
+         <Route path="/profile/update"  element={
+             <PrivateRoute>
+               <ProfileUpdate />
+             </PrivateRoute>
+           } />
          <Route
            path="/dashboard"
            element={
              <PrivateRoute>
                <Dashboard />
+             </PrivateRoute>
+           }
+         />
+         <Route
+           path="/wallet"
+           element={
+             <PrivateRoute>
+               <Wallet />
              </PrivateRoute>
            }
          />

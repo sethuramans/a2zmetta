@@ -13,7 +13,7 @@ const LogoutButton = () => {
   };
 
   return (
-    <button className="btn btn-primary  d-block mx-auto my-2" onClick={handleLogout}>
+    <button className="btn btn-primary  d-block  m-2" onClick={handleLogout}>
       Logout
     </button>
   );

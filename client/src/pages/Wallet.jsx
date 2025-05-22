@@ -1,14 +1,14 @@
 import React from "react";
 import { useNavigate } from 'react-router-dom';
 
-function PageNotFound() {
+function Wallet() {
   const navigate = useNavigate();
   return (
-    <div id="pagenotfound" className="message-page">
+    <div id="wallet" className="message-page">
      
      <div class="error-container">
-        <div class="error-title">404</div>
-        <div class="error-message">Oops! The page you're looking for doesn't exist.</div>
+        <div class="error-title">Wallet</div>
+        <div class="error-message">This feature is coming soon. Stay tuned!</div>
         <button onClick={() => navigate('/')} class="btn btn-primary btn-lg">Go Back to Home</button>
     </div>
         
@@ -16,4 +16,4 @@ function PageNotFound() {
   );
 }
 
-export default PageNotFound;
+export default Wallet;

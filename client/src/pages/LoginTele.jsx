@@ -23,7 +23,7 @@ import {loginUser} from '../services/api';
           console.log("Telegram user  found");
            user = {
              telegramId: teleUser.id,
-             firstname: teleUser.first_name || "",
+             displayname: teleUser.first_name || "",
              lastname: teleUser.last_name || "",
              username: teleUser.username || teleUser.id,
              photoUrl: teleUser.photo_url || "",
@@ -33,7 +33,7 @@ import {loginUser} from '../services/api';
           console.log("Telegram user not found, Might be a website access");
            user = {
              telegramId: 12345678,
-             firstname: "Anonymous",
+             displayname: "Anonymous",
              lastname: "user",
              username: "anonymous",
              photoUrl: "",
@@ -54,7 +54,7 @@ import {loginUser} from '../services/api';
           window.Telegram.WebApp.initData = {
             user: {
               telegramId: 123456789,
-              firstname: "Sethuraman",
+              displayname: "Sethuraman",
               username: "sethuramancbe",
             },
           };

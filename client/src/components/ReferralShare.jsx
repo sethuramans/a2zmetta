@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {getBaseUrl} from '../utils/functions';
+import {getBaseUrl} from '../utils/helper';
 
 const ReferralShare = ({ referralCode }) => {
   const [copied, setCopied] = useState(false);

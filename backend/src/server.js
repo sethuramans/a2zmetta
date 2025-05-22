@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/user');
 const rewardsRoutes = require('./routes/rewards');
 const tasksRoutes = require('./routes/tasks');
 const tasksActionRoutes = require('./routes/tasksAction');
@@ -17,6 +18,8 @@ app.use(express.json());
 
 // Register routes
 app.use("/api/auth", authRoutes);
+
+app.use('/api/user', authenticateToken, userRoutes);
 
 app.use("/api/rewards", authenticateToken, rewardsRoutes);
 

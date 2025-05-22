@@ -54,6 +54,9 @@ const authSlice = createSlice({
       state.user = null;
       state.token = null;
       state.error = null;
+    },setUser: (state, action) => {
+      state.user = { ...state.user, ...action.payload };
+      localStorage.setItem(USER, JSON.stringify(state.user)); // 🔄 Keep storage in sync
     },
   },
   extraReducers: (builder) => {
@@ -86,7 +89,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, setUser } = authSlice.actions;
 export default authSlice.reducer;
 
 /*import { createSlice } from "@reduxjs/toolkit";
