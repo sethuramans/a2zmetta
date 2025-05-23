@@ -39,21 +39,21 @@ exports.getFriends = async (req, res) => {
 // Update user profile
 exports.save = async (req, res) => {
   const { id: userId } = req.user;
-  const { displayname, email } = req.body;
+  const { displayname, email, title } = req.body;
 
-  if (!userId || !displayname || !email) {
+  if (!userId || !displayname || !email || !title) {
     return res.status(400).json({ status: 'error', error: 'Missing fields' });
   }
 
   const updateQuery = `
     UPDATE ${dbTables.USER}
-    SET displayname = ?, email = ?
+    SET displayname = ?, email = ?, title = ?
     WHERE id = ?;
   `;
-  const params = [displayname, email, userId];
+  const params = [displayname, email, title, userId];
 
   try {
-    process.env.DEBUG === 'Y' && console.log('Updating user:', userId, displayname, email);
+    process.env.DEBUG === 'Y' && console.log('Updating user:', userId, displayname, email, title);
 
     const [results] = await db.query(updateQuery, params);
 

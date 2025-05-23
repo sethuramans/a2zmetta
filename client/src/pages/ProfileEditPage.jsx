@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { fetchUserProfile, updateProfile } from '../store/profileSlice';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { fetchUserProfile, updateProfile } from "../store/profileSlice";
 
 const ProfileEditPage = () => {
   const dispatch = useDispatch();
@@ -9,14 +9,16 @@ const ProfileEditPage = () => {
   const { user, loading, error } = useSelector((state) => state.auth);
 
   const [formData, setFormData] = useState({
-    displayname: '',
-    email: '',
-    username: '',
+    title: "Mr",
+    displayname: "",
+    email: "",
+    username: "",
   });
 
   const [formErrors, setFormErrors] = useState({
-    displayname: '',
-    email: '',
+    title: "",
+    displayname: "",
+    email: "",
   });
 
   useEffect(() => {
@@ -24,9 +26,10 @@ const ProfileEditPage = () => {
       dispatch(fetchUserProfile(1)); // Replace with real user ID from auth
     } else {
       setFormData({
-        displayname: user.displayname || '',
-        email: user.email || '',
-        username: user.username || '',
+        title: user.title || "Mr",
+        displayname: user.displayname || "",
+        email: user.email || "",
+        username: user.username || "",
       });
     }
   }, [user, dispatch]);
@@ -34,22 +37,27 @@ const ProfileEditPage = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    setFormErrors((prev) => ({ ...prev, [name]: '' })); // Clear error on change
+    setFormErrors((prev) => ({ ...prev, [name]: "" })); // Clear error on change
   };
 
   const validateForm = () => {
     let errors = {};
+
+    if (!formData.title.trim()) {
+      errors.title = "Title is required.";
+    }
+
     if (!formData.displayname.trim()) {
-      errors.displayname = 'Display name is required.';
+      errors.displayname = "Display name is required.";
     } else if (formData.displayname.trim().length < 2) {
-      errors.displayname = 'Display name must be at least 2 characters.';
+      errors.displayname = "Display name must be at least 2 characters.";
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email.trim()) {
-      errors.email = 'Email is required.';
+      errors.email = "Email is required.";
     } else if (!emailRegex.test(formData.email.trim())) {
-      errors.email = 'Invalid email format.';
+      errors.email = "Invalid email format.";
     }
 
     setFormErrors(errors);
@@ -62,9 +70,9 @@ const ProfileEditPage = () => {
 
     dispatch(updateProfile(formData))
       .unwrap()
-      .then(() => navigate('/profile'))
+      .then(() => navigate("/profile"))
       .catch((err) => {
-        console.error('Error updating profile:', err);
+        console.error("Error updating profile:", err);
       });
   };
 
@@ -83,7 +91,9 @@ const ProfileEditPage = () => {
                 {user && (
                   <form onSubmit={handleSubmit} noValidate>
                     <div className="mb-3">
-                      <label htmlFor="username" className="mb-2 text-muted">Username</label>
+                      <label htmlFor="username" className="mb-2 text-muted">
+                        Username
+                      </label>
                       <input
                         type="text"
                         name="username"
@@ -94,30 +104,69 @@ const ProfileEditPage = () => {
                     </div>
 
                     <div className="mb-3">
-                      <label htmlFor="displayname" className="mb-2 text-muted">Display Name</label>
+                      <label htmlFor="title" className="mb-2 text-muted">
+                        Title
+                      </label>
+                      <select
+                        name="title"
+                        id="title"
+                        value={formData.title}
+                        onChange={handleChange}
+                        className={`form-control ${
+                          formErrors.displayname ? "is-invalid" : ""
+                        }`}
+                        disabled={loading}
+                      >
+                        <option value="Mr">Mr</option>
+                        <option value="Mrs">Mrs</option>
+                        <option value="Ms">Ms</option>
+                        <option value="Dr">Dr</option>
+                        <option value="Prof">Prof</option>
+                      </select>
+
+                      {formErrors.title && (
+                        <div className="invalid-feedback">
+                          {formErrors.title}
+                        </div>
+                      )}
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="displayname" className="mb-2 text-muted">
+                        Display Name
+                      </label>
                       <input
                         type="text"
                         name="displayname"
                         value={formData.displayname}
                         onChange={handleChange}
-                        className={`form-control ${formErrors.displayname ? 'is-invalid' : ''}`}
+                        className={`form-control ${
+                          formErrors.displayname ? "is-invalid" : ""
+                        }`}
                       />
                       {formErrors.displayname && (
-                        <div className="invalid-feedback">{formErrors.displayname}</div>
+                        <div className="invalid-feedback">
+                          {formErrors.displayname}
+                        </div>
                       )}
                     </div>
 
                     <div className="mb-3">
-                      <label htmlFor="email" className="mb-2 text-muted">Email</label>
+                      <label htmlFor="email" className="mb-2 text-muted">
+                        Email
+                      </label>
                       <input
                         type="email"
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        className={`form-control ${formErrors.email ? 'is-invalid' : ''}`}
+                        className={`form-control ${
+                          formErrors.email ? "is-invalid" : ""
+                        }`}
                       />
                       {formErrors.email && (
-                        <div className="invalid-feedback">{formErrors.email}</div>
+                        <div className="invalid-feedback">
+                          {formErrors.email}
+                        </div>
                       )}
                     </div>
 
@@ -125,7 +174,7 @@ const ProfileEditPage = () => {
                       <button
                         type="button"
                         className="btn btn-outline-secondary me-2"
-                        onClick={() => navigate('/profile')}
+                        onClick={() => navigate("/profile")}
                         disabled={loading}
                       >
                         Cancel
@@ -142,7 +191,7 @@ const ProfileEditPage = () => {
                             aria-hidden="true"
                           />
                         ) : (
-                          'Save'
+                          "Save"
                         )}
                       </button>
                     </div>

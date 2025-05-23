@@ -34,7 +34,7 @@ const ReferralShare = ({ referralCode }) => {
           rel="noreferrer"
           className="btn btn-success"
         >
-          <i className=''></i> WhatsApp
+          <i className='bi bi-whatsapp'></i> WhatsApp
         </a>
 
         <a
@@ -43,7 +43,7 @@ const ReferralShare = ({ referralCode }) => {
           rel="noreferrer"
           className="btn btn-info text-white"
         >
-          <i className=''></i> Telegram
+          <i className='bi bi-telegram'></i> Telegram
         </a>
 
         <a
@@ -52,7 +52,7 @@ const ReferralShare = ({ referralCode }) => {
           rel="noreferrer"
           className="btn btn-primary"
         >
-          <i className=''></i> Twitter
+          <i className='bi bi-twitter-x'></i> Twitter
         </a>
       </div>
     </div>

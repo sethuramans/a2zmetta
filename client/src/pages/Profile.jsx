@@ -31,7 +31,7 @@ const Dashboard = () => {
           <div className="col-md-12">
             <div className="profile-content">
               <div className="d-flex justify-content-between align-items-center mb-4">
-                <h2 className="mb-0">Welcome {user?.displayname || user.username}</h2>
+                <h2 className="mb-0">Welcome {user?.title} {user?.displayname || user.username} !!</h2>
                 <div className='d-flex'>
                   {/*<button className='btn btn-primary  d-block m-2' onClick={() => navigate('/profile/update')}>Edit</button>
                   <LogoutButton />*/}
