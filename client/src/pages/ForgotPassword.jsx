@@ -18,13 +18,18 @@ function ForgotPassword() {
    // Redirect to dashboard if already logged in
    useEffect(() => {
     if (user) {
-      navigate("/dashboard");
+      navigate("/profile");
     }
   }, [user, navigate]);
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(String(email).toLowerCase());
+  };
+
+  // Navigate to register page
+  const handleRegister = () => {
+    navigate("/register");
   };
 
   const handleSubmit = (e) => {
@@ -86,6 +91,18 @@ function ForgotPassword() {
                     {loading ? "Sending..." : "Send Reset Link"}
                   </button>
                 </form>
+              </div>
+              <div className="card-footer py-3 border-0">
+                <div className="text-center">
+                  Don't have an account?{" "}
+                  <button
+                    type="button"
+                    className="btn btn-link p-0"
+                    onClick={handleRegister}
+                  >
+                    Create One
+                  </button>
+                </div>
               </div>
             </div>
           </div>

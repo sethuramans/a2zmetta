@@ -1,4 +1,4 @@
-// src/pages/Dashboard.js
+// src/pages/profile.js
 /*import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import axios from '../axios';
@@ -10,7 +10,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (token) {
-      axios.get('/auth/dashboard', { headers: { Authorization: token } })
+      axios.get('/auth/profile', { headers: { Authorization: token } })
         .then((response) => {
           setData(response.data);
         })

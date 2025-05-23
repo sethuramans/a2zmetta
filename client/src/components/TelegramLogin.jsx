@@ -22,7 +22,7 @@ const TelegramLogin = () => {
           const { token, user } = response.data;
           // Dispatch login action to store token and user
           dispatch(login({ token, user }));
-          window.location.href = "/dashboard";
+          window.location.href = "/profile";
         })
         .catch((error) => {
           console.error("Login failed:", error);

@@ -9,6 +9,7 @@ import ReferralShare from '../components/ReferralShare';
 import FriendsList from '../components/FriendsList';
 import RewardsTimer from "../components/RewardTimer";
 import TotalRewardsEarned from "../components/TotalRewards";
+import ProfileActions from '../components/ProfileActions';
 
 const Dashboard = () => {
   const user = useSelector((state) => state.auth.user);
@@ -32,8 +33,9 @@ const Dashboard = () => {
               <div className="d-flex justify-content-between align-items-center mb-4">
                 <h2 className="mb-0">Welcome {user?.displayname || user.username}</h2>
                 <div className='d-flex'>
-                  <button className='btn btn-primary  d-block m-2' onClick={() => navigate('/profile/update')}>Edit</button>
-                  <LogoutButton />
+                  {/*<button className='btn btn-primary  d-block m-2' onClick={() => navigate('/profile/update')}>Edit</button>
+                  <LogoutButton />*/}
+                  <ProfileActions/>
                 </div>
               </div>
             </div>

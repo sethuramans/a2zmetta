@@ -14,10 +14,10 @@ export default function RegisterPage() {
     dispatch(resetAuthState());
   }, [dispatch]);
 
-   // Redirect to dashboard if already logged in
+   // Redirect to profile if already logged in
    useEffect(() => {
     if (user) {
-      navigate("/dashboard");
+      navigate("/profile");
     }
   }, [user, navigate]);
 

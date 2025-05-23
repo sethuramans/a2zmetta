@@ -62,8 +62,8 @@ import {loginUser} from '../services/api';
         const response = await loginUser({ user });
         console.log('_loginUser response', response);
         dispatch(login(response));
-        navigate("/dashboard");
-        //window.location.href = "/dashboard";
+        navigate("/profile");
+        //window.location.href = "/profile";
       } catch (error) {
         console.error("Error Logging user:", error);
       } finally {

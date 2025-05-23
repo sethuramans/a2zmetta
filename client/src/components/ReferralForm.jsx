@@ -41,7 +41,7 @@ const ReferralForm = () => {
       const response = await loginUser({ user });
       console.log("_loginUser response", response);
       dispatch(login(response));
-      navigate("/dashboard");
+      navigate("/profile");
       setMessage(response.data.message);
     } catch (err) {
       setMessage("Error creating user");
