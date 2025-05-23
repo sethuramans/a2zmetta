@@ -1,16 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { forgotPasswordThunk, resetAuthState } from '../store/authSlice';
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const dispatch = useDispatch();
-  const { loading, message, error } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  const { loading, message, error, user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(resetAuthState());
   }, [dispatch]);
+
+  
+   // Redirect to dashboard if already logged in
+   useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

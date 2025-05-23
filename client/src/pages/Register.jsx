@@ -1,17 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { register, resetAuthState } from '../store/authSlice';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 export default function RegisterPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
   const [searchParams] = useSearchParams();
   const referralFromUrl = searchParams.get("ref") || "";
 
   useEffect(() => {
     dispatch(resetAuthState());
   }, [dispatch]);
+
+   // Redirect to dashboard if already logged in
+   useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
 
   const [form, setForm] = useState({
     username: "",

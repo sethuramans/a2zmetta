@@ -13,6 +13,13 @@ export default function LoginPage() {
     dispatch(resetAuthState());
   }, [dispatch]);
 
+   // Redirect to dashboard if already logged in
+   useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
+
   const successMessage = location.state?.message;
 
   const [phone, setPhone] = useState("");
@@ -22,12 +29,7 @@ export default function LoginPage() {
     password: "",
   });
 
-  // Redirect to dashboard if already logged in
-  useEffect(() => {
-    if (user) {
-      navigate("/dashboard");
-    }
-  }, [user, navigate]);
+ 
 
   // Phone number validation
   const validatePhone = (phone) => {

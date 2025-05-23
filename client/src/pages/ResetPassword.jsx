@@ -12,11 +12,12 @@ function ResetPassword() {
   const [confirm, setConfirm] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmError, setConfirmError] = useState("");
-  const { loading, message, error } = useSelector((state) => state.auth);
+  const { loading, message, error, user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(resetAuthState());
   }, [dispatch]);
+
   useEffect(() => {
     // If reset was successful, redirect after 3 seconds
     if (message) {
@@ -24,6 +25,13 @@ function ResetPassword() {
       return () => clearTimeout(timer);
     }
   }, [message, navigate]);
+
+   // Redirect to dashboard if already logged in
+   useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
 
   const validate = () => {
     let valid = true;
