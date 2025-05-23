@@ -1,31 +1,88 @@
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { forgotPasswordThunk, resetAuthState } from '../store/authSlice';
 
-import Header from "../components/Header";
-export default function ForgotPasswordPage() {
-    const [email, setEmail] = useState('');
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      await axios.post('http://localhost:5000/api/auth/forgot-password', { email });
-      alert('Check your email for reset instructions');
-    };
-  
-    return (
-      <div id="forgot-password" className="has-form">
-        <Header title="Forgot Password?" />
-        <div className="main-content container">
-          <div className="row ">
-            <div className="col-md-12 col-lg-6">
-              <form onSubmit={handleSubmit}>
-                <input
-                  placeholder="Your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                <button type="submit">Reset Password</button>
-              </form>
+function ForgotPassword() {
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const dispatch = useDispatch();
+  const { loading, message, error } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    dispatch(resetAuthState());
+  }, [dispatch]);
+
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Reset errors
+    setEmailError("");
+
+    // Validation
+    if (!email.trim()) {
+      setEmailError("Email is required");
+      return;
+    }
+    if (!validateEmail(email)) {
+      setEmailError("Invalid email format");
+      return;
+    }
+
+    dispatch(forgotPasswordThunk({ email }));
+  };
+
+  return (
+    <div id="forgot" className="h-100 py-5">
+      <div className="container h-100">
+        <div className="row justify-content-sm-center h-100">
+          <div className="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9 my-5">
+            <div className="card shadow-lg">
+              <div className="card-body p-5">
+                <h1 className="fs-4 card-title fw-bold mb-4">
+                  Forgot Password
+                </h1>
+                <form onSubmit={handleSubmit} noValidate>
+                  {message && (
+                    <div className="alert alert-success">{message}</div>
+                  )}
+                  {error && <div className="alert alert-danger">{error}</div>}
+                  <div className="mb-3">
+                    <label htmlFor="email">Email address</label>
+                    <input
+                      type="email"
+                      className={`form-control ${
+                        emailError ? "is-invalid" : ""
+                      }`}
+                      id="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      disabled={loading}
+                      required
+                    />
+                    {emailError && (
+                      <div className="invalid-feedback">{emailError}</div>
+                    )}
+                  </div>
+                  <button
+                    className="btn btn-primary w-100"
+                    type="submit"
+                    disabled={loading}
+                  >
+                    {loading ? "Sending..." : "Send Reset Link"}
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    );
-  }
-  
+    </div>
+  );
+}
+
+export default ForgotPassword;

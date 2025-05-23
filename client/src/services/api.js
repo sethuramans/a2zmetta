@@ -2,16 +2,12 @@ import axios from "axios";
 import { API_BASE_URL, STORAGE } from "../utils/constants";
 const { TOKEN } = STORAGE;
 
-
 // ✅ Create Axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: { "Content-Type": "application/json" },
-  params: {
-   
-  }
+  params: {},
 });
-
 
 // ✅ Attach JWT token to every request
 api.interceptors.request.use(
@@ -20,22 +16,22 @@ api.interceptors.request.use(
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }
-    console.log('Request config:', config); // Log the config before sending
+    console.log("Request config:", config); // Log the config before sending
     return config;
   },
   (error) => {
-    console.error('Request error:', error); // Log request errors
+    console.error("Request error:", error); // Log request errors
     return Promise.reject(error);
   }
 );
 
 api.interceptors.response.use(
   (response) => {
-    console.log('Response received:', response); // Log the response
+    console.log("Response received:", response); // Log the response
     return response;
   },
   (error) => {
-    console.error('Response error:', error); // Log response errors
+    console.error("Response error:", error); // Log response errors
     return Promise.reject(error);
   }
 );
@@ -70,11 +66,10 @@ api.interceptors.request.use(
       
       console.log('api.interceptors.request after',config);
     }*/
-    /*return config;
+/*return config;
   },
   (error) => Promise.reject(error)
 );*/
-
 
 // ✅ Store token in localStorage
 /*export const setAuthToken = (token) => {
@@ -97,9 +92,14 @@ export const loginUser = (userData) =>
     return res.data;
   });
 
+// ✅ Forgot password
+export const forgotPassword = (data) => api.post("/auth/forgot-password", data);
+
+// ✅ Reset password
+export const resetPassword = (data) => api.post("/auth/reset-password", data);
+
 // ✅ Get Profile
 export const getProfile = () => api.get("/profile");
-
 
 // ✅ Save Profile
 export const updateUserProfile = (data) =>
@@ -116,7 +116,6 @@ export const getFriends = (page, limit) =>
     },
   });
 
-
 // ✅ Get Total rewards earned
 export const getTotalRewardsEarned = () => api.get("/rewards/total");
 
@@ -127,11 +126,10 @@ export const saveRewards = (data) =>
   });
 
 // ✅ get task
-  export const getTasks = (data) =>
+export const getTasks = (data) =>
   api.get("/tasks/list", data).then((res) => {
     return res.data;
   });
-
 
 // ✅ Save task
 export const saveTasks = (data) =>
@@ -139,16 +137,14 @@ export const saveTasks = (data) =>
     return res.data;
   });
 
-
-  // ✅ get task actions
-  export const getTaskActions = (data) =>
+// ✅ get task actions
+export const getTaskActions = (data) =>
   api.get("/tasks-action/list", data).then((res) => {
     return res.data;
   });
 
-  
-  // ✅ save task actions
-  export const saveTaskActions = (data) =>
+// ✅ save task actions
+export const saveTaskActions = (data) =>
   api.post("/tasks-action/save", data).then((res) => {
     return res.data;
   });

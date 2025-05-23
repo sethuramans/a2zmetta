@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { loginUser, registerUser } from '../services/api';
+import { loginUser, registerUser, forgotPassword, resetPassword  } from '../services/api';
 import {STORAGE} from '../utils/constants';
 const { USER, TOKEN, REWARD_START_TIME } = STORAGE;
 
@@ -30,6 +30,36 @@ export const register = createAsyncThunk('auth/register', async (data, thunkAPI)
   }
 });
 
+
+
+// Forgot Password
+export const forgotPasswordThunk = createAsyncThunk(
+  'auth/forgotPassword',
+  async (email, thunkAPI) => {
+    try {
+      const res = await forgotPassword(email);
+      return res.data.message;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response?.data?.message || err.message);
+    }
+  }
+);
+
+// Reset Password
+export const resetPasswordThunk = createAsyncThunk(
+  'auth/resetPassword',
+  async (data, thunkAPI) => {
+    try {
+      const res = await resetPassword(data);
+      return res.data.message;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response?.data?.message || err.message);
+    }
+  }
+);
+
+
+
 const getUserData = () => localStorage.getItem(USER) ?? null;
 const getToken = () => localStorage.getItem(TOKEN) ?? null;
 const user = JSON.parse(getUserData());
@@ -58,6 +88,11 @@ const authSlice = createSlice({
       state.user = { ...state.user, ...action.payload };
       localStorage.setItem(USER, JSON.stringify(state.user)); // 🔄 Keep storage in sync
     },
+    resetAuthState(state) {
+      state.error = null;
+      state.message = null;
+      // optionally reset other fields if needed
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -66,30 +101,54 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
-        console.log('authslice extra fullfilled', action);
+        console.log("authslice extra fullfilled", action);
         state.loading = false;
         state.user = action.payload?.user || null;
         state.token = action.payload?.token || null;
         state.error = null;
       })
       .addCase(login.rejected, (state, action) => {
-        console.log('authslice extra rejected', action);
+        console.log("authslice extra rejected", action);
         state.loading = false;
         state.user = null;
         state.token = null;
-        state.error = action.payload || 'Login failed';
+        state.error = action.payload || "Login failed";
       })
       .addCase(register.fulfilled, (state, action) => {
         state.user = action.payload?.user || null;
         state.error = null;
       })
       .addCase(register.rejected, (state, action) => {
-        state.error = action.payload || 'Registration failed';
+        state.error = action.payload || "Registration failed";
+      })
+      .addCase(forgotPasswordThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(forgotPasswordThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(forgotPasswordThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(resetPasswordThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(resetPasswordThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(resetPasswordThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
 
-export const { logout, setUser } = authSlice.actions;
+export const { logout, setUser, resetAuthState } = authSlice.actions;
 export default authSlice.reducer;
 
 /*import { createSlice } from "@reduxjs/toolkit";

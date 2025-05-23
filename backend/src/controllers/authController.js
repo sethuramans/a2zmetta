@@ -1,9 +1,9 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const db = require('../config/db');
-const dbTables = require('../utils/constants/dbTables');
-const crypto = require('crypto');
-const nodemailer = require('nodemailer');
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const db = require("../config/db");
+const dbTables = require("../utils/constants/dbTables");
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 const REFERRAL_POINTS = 10;
 
 // Login via Telegram
@@ -30,9 +30,16 @@ exports.telegramLogin = async (req, res) => {
       const token = jwt.sign(
         { id: existingUser.id, username: existingUser.username },
         process.env.JWT_SECRET,
-        { expiresIn: '365d' }
+        { expiresIn: "365d" }
       );
-      return res.status(200).json({ status:'success', message: 'Login successful', token, user: existingUser });
+      return res
+        .status(200)
+        .json({
+          status: "success",
+          message: "Login successful",
+          token,
+          user: existingUser,
+        });
     }
 
     // 3. If not found, insert new user
@@ -50,7 +57,7 @@ exports.telegramLogin = async (req, res) => {
 
     // 4. Generate token for new user
     const token = jwt.sign({ id: userId, username }, process.env.JWT_SECRET, {
-      expiresIn: '365d',
+      expiresIn: "365d",
     });
 
     // 5. Handle referral reward if applicable
@@ -69,18 +76,26 @@ exports.telegramLogin = async (req, res) => {
       }
     }
 
-    return res.status(201).json({ status:'success', message: 'User registered successfully', token, user: newUser });
+    return res
+      .status(201)
+      .json({
+        status: "success",
+        message: "User registered successfully",
+        token,
+        user: newUser,
+      });
   } catch (error) {
-    console.error('Telegram login error:', error);
-    return res.status(500).json({status:'error',  message: 'Internal server error' });
+    console.error("Telegram login error:", error);
+    return res
+      .status(500)
+      .json({ status: "error", message: "Internal server error" });
   }
 };
 
-
-const generateReferralCode = () => crypto.randomBytes(4).toString('hex');
+const generateReferralCode = () => crypto.randomBytes(4).toString("hex");
 
 exports.register = async (req, res) => {
-  const { username, phone, password, referralCode } = req.body;
+  const { username, phone, email, password, referralCode } = req.body;
 
   try {
     process.env.DEBUG === "Y" &&
@@ -97,8 +112,8 @@ exports.register = async (req, res) => {
 
     if (existingUsers.length > 0) {
       return res.status(400).json({
-        status: 'error',
-        message: 'Phone number is already registered.',
+        status: "error",
+        message: "Phone number is already registered.",
       });
     }
 
@@ -109,7 +124,6 @@ exports.register = async (req, res) => {
     // ✅ Check referral and get referrer ID
     let referredBy = null;
     let referrerId = null;
-    
 
     if (referralCode) {
       const [referrer] = await db.query(
@@ -124,39 +138,47 @@ exports.register = async (req, res) => {
 
     // ✅ Insert new user
     const [result] = await db.query(
-      `INSERT INTO ${dbTables.USER} (username, phonenumber, password, referral_code, referred_by) VALUES (?, ?, ?, ?, ?)`,
-      [username, phone, hashed, userReferralCode, referredBy]
+      `INSERT INTO ${dbTables.USER} (username, phonenumber, email, password, referral_code, referred_by) VALUES (?, ?, ?, ?, ?)`,
+      [username, phone, email, hashed, userReferralCode, referredBy]
     );
 
     // ✅ If referred, add reward points to referrer
     if (referrerId) {
       await db.query(
         `INSERT INTO ${dbTables.REWARDS} (user_id, points, reason) VALUES (?, ?, ?)`,
-        [referrerId, REFERRAL_POINTS, 'referral_bonus']
+        [referrerId, REFERRAL_POINTS, "referral_bonus"]
       );
     }
 
-    res.json({ status: 'success', message: 'Registered successfully!' });
+    res.json({ status: "success", message: "Registered successfully!" });
   } catch (err) {
-    console.error('Registration error:', err);
-    res.status(500).json({ status: 'error', message: err.message });
+    console.error("Registration error:", err);
+    res.status(500).json({ status: "error", message: err.message });
   }
 };
-
 
 exports.login = async (req, res) => {
   const { phone, password } = req.body;
   try {
-    process.env.DEBUG === 'Y' && console.log(`AuthController > login: ${phone}, ${password}`, req.body);
-  
-    const [rows] = await db.query(`SELECT * FROM ${dbTables.USER} WHERE phonenumber = ?`, [phone]);
-    if (!rows.length) return res.status(401).json({status:'error',  message: 'Invalid credentials!' });
+    process.env.DEBUG === "Y" &&
+      console.log(`AuthController > login: ${phone}, ${password}`, req.body);
+
+    const [rows] = await db.query(
+      `SELECT * FROM ${dbTables.USER} WHERE phonenumber = ?`,
+      [phone]
+    );
+    if (!rows.length)
+      return res
+        .status(401)
+        .json({ status: "error", message: "Invalid credentials!" });
 
     const user = rows[0];
     const valid = await bcrypt.compare(password, user.password);
-  
+
     if (!valid)
-      return res.status(401).json({ status:'error', message: "Invalid credentials!!" });
+      return res
+        .status(401)
+        .json({ status: "error", message: "Invalid credentials!!" });
 
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
       expiresIn: "356d",
@@ -173,50 +195,85 @@ exports.login = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(500).json({status:'error',  message: err.message });
+    res.status(500).json({ status: "error", message: err.message });
   }
 };
 
 exports.forgotPassword = async (req, res) => {
   const { email } = req.body;
-  const token = crypto.randomBytes(32).toString('hex');
-  const expiry = new Date(Date.now() + 15 * 60000); // 15 mins
+  const token = crypto.randomBytes(32).toString("hex");
+  const expiry = new Date(Date.now() + 15 * 60 * 1000); // 15 mins from now
 
-  await db.query(`UPDATE ${dbTables.USER} SET reset_token = ?, reset_token_expiry = ? WHERE email = ?`, [token, expiry, email]);
+  try {
+    const [user] = await db.query(
+      `SELECT * FROM ${dbTables.USER} WHERE email = ?`,
+      [email]
+    );
+    if (user.length === 0)
+      return res
+        .status(404)
+        .json({ status: "error", message: "User not found" });
 
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
+    await db.query(
+      `UPDATE ${dbTables.USER} SET reset_token = ?, reset_token_expiry = ? WHERE email = ?`,
+      [token, expiry, email]
+    );
 
-  const link = `http://localhost:3000/reset-password/${token}`;
+    const resetLink = `${process.env.SITE_BASE_URL}reset-password/${token}`;
 
-  await transporter.sendMail({
-    from: process.env.EMAIL_USER,
-    to: email,
-    subject: 'Password Reset',
-    html: `<p>Click <a href="${link}">here</a> to reset your password.</p>`,
-  });
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
 
-  res.json({ status:'success', message: 'Reset link sent to email' });
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Password Reset",
+      html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>`,
+    });
+
+    res.json({
+      status: "success",
+      message: "Password reset link sent to email",
+    });
+  } catch (err) {
+    console.error("Error in forgotPassword:", err);
+    res.status(500).json({ status: "error", message: "Server error" });
+  }
 };
 
 exports.resetPassword = async (req, res) => {
   const { token, password } = req.body;
 
-  const [rows] = await db.query(
-    `SELECT * FROM ${dbTables.USER} WHERE reset_token = ? AND reset_token_expiry > NOW()`,
-    [token]
-  );
+  try {
+    const [users] = await db.query(
+      `SELECT * FROM ${dbTables.USER} WHERE reset_token = ? AND reset_token_expiry > NOW()`,
+      [token]
+    );
 
-  if (!rows.length) return res.status(400).json({ status:'error', message: 'Invalid or expired token' });
+    if (users.length === 0) {
+      return res
+        .status(400)
+        .json({ status: "error", message: "Invalid or expired token" });
+    }
 
-  const hashed = await bcrypt.hash(password, 10);
-  await db.query(`UPDATE ${dbTables.USER} SET password = ?, reset_token = NULL, reset_token_expiry = NULL WHERE id = ?`, [hashed, rows[0].id]);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-  res.json({ status:'success',  message: 'Password has been reset' });
+    await db.query(
+      `UPDATE ${dbTables.USER} SET password = ?, reset_token = NULL, reset_token_expiry = NULL WHERE id = ?`,
+      [hashedPassword, users[0].id]
+    );
+
+    res.json({
+      status: "success",
+      message: "Password has been reset successfully",
+    });
+  } catch (err) {
+    console.error("Error in resetPassword:", err);
+    res.status(500).json({ status: "error", message: "Server error" });
+  }
 };
-

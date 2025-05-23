@@ -12,6 +12,8 @@ import AboutUs from './pages/AboutUs';
 import ProfileUpdate from './pages/ProfileEditPage';
 import PageNotFound from './pages/PageNotFound';
 import Wallet from "./pages/Wallet";
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from "./pages/ResetPassword";
 import ThemeToggle from './components/ThemeToggle';
 const PrivateRoute = ({ children }) => {
   const token = useSelector((state) => state.auth.token);
@@ -23,8 +25,14 @@ const AppRoutes = () => {
   const theme = useSelector((state) => {console.log(state);return state.theme.mode});
   const hideNavbarOn = ['/logins'];
   const shouldHideNavbar = hideNavbarOn.includes(location.pathname);
-  const formPage = ['/login', '/register', '/profile/update'];
-  const isFormPage = formPage.includes(location.pathname);
+  const formPages = [
+    "/login",
+    "/register",
+    "/profile/update",
+    "/forgot-password",
+    "/reset-password/",
+  ];
+  const isFormPage = formPages.some((path) => location.pathname.startsWith(path));
  return (
    <div
      className={`min-vh-100 ${isFormPage ? 'form-page': ''} ${
@@ -78,6 +86,8 @@ const AppRoutes = () => {
              </PrivateRoute>
            }
          />
+         <Route path="/forgot-password" element={<ForgotPassword />} />
+         <Route path="/reset-password/:token" element={<ResetPassword />} />
          <Route path="/*" element={<PageNotFound />} />
        </Routes>
      </main>
