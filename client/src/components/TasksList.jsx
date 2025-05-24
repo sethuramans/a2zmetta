@@ -45,54 +45,62 @@ const TaskList = () => {
   if (loading) return <Loader message='Loading tasks...'/>;
   if (error) return <p>Error: {error}</p>;
   return (
-    <div style={{ maxWidth: 600, margin: "30px auto" }} id='task-list'>
+    <div  id='task-list'>
       <h2>📋 Task List</h2>
 
     
-      <ul style={{ listStyle: "none", padding: 0 }}>
+      <div className="p-0 my-4">
         {tasks && tasks.map((task) => {
-          const {id, title, url, btnText, action} = task;
+          const {id, title, url, btnText, action, style, helpText} = task;
           const recentLinkObj = tasks_links.find((taskLink) => id === taskLink.task_id);
           const recentLink = recentLinkObj && recentLinkObj.link;
           return (
-            <li
-              key={id}
-              style={{
-                margin: "15px 0",
-                padding: "10px",
-                border: "1px solid #ccc",
-              }}
-              className="justify-content-between d-flex rounded-3 flex-wrap"
-            >
-              <h3>{title}</h3>
-              <div className="action icons w-100 d-flex justify-content-end">
-                {!action && (
-                  <a
-                    className="btn btn-dark icon-btn mx-1 "
-                    href="#"                    
-                    onClick={() => handleAction(id, url)}
-                  >
-                    <span className="bi bi-hand-thumbs-up img-circle btn-glyphicon glyphicon text-primary"></span>
-                    {btnText}
-                  </a>
-                )}
+            <>
+              <div className={`d-flex border p-3 mb-3 rounded-3 left-border-highlight border-${style}`}>
+                <div className="me-3 d-flex align-items-center">
+                  <i className={`bi bi-${style} fs-1 `}></i>
+                </div>
 
-                <a
-                  className="btn btn-info icon-btn mx-1"
-                  href='#'
-                  onClick={() => window.open(recentLink, "_blank")}
-                >
-                  <span className="bi bi-eye img-circle btn-glyphicon glyphicon text-info"></span>
-                  View 
-                </a>
+                <div className="flex-grow-1 d-flex flex-column justify-content-between">
+                  <div>
+                    <h5 className="mb-1"> {title}</h5>
+                    {helpText && (<p className="mb-2 text-dark">
+                     {helpText}
+                    </p>)}
+                  </div>
+
+                  <div className="d-flex justify-content-end gap-2">
+                    {!action && (
+                      <a
+                        className="btn btn-dark icon-btn mx-1 "
+                        href="#"
+                        onClick={() => handleAction(id, url)}
+                      >
+                        <span className="bi bi-hand-thumbs-up img-circle btn-glyphicon glyphicon text-primary"></span>
+                        {btnText}
+                      </a>
+                    )}
+
+                    <a
+                      className="btn btn-info icon-btn mx-1"
+                      href="#"
+                      onClick={() => window.open(recentLink, "_blank")}
+                    >
+                      <span className="bi bi-eye img-circle btn-glyphicon glyphicon text-info"></span>
+                      View
+                    </a>
+                  </div>
+                </div>
               </div>
-            </li>
+
+            </>
           );
         }
         
         )}
-      </ul>
+      </div>
     </div>
+    
   );
 };
 

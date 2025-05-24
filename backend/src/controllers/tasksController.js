@@ -11,7 +11,7 @@ exports.list = async (req, res) => {
   }
 
   const query = `
-    SELECT t.id, t.title, t.url, t.action_text as btnText, ta.action
+    SELECT t.id, t.title, t.url, t.action_text as btnText, t.style as style, t.help_text as helpText,  ta.action
     FROM ${dbTables.TASKS} as t
     LEFT JOIN ${dbTables.TASKS_ACTION} AS ta
       ON t.id = ta.task_id AND ta.user_id = ?
