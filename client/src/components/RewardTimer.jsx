@@ -56,7 +56,7 @@ function RewardTimer({ userId }) {
 
       setTimeLeft(Math.max(CLOSING_HOURS - elapsed, 0));
 
-      if (elapsed >= CLOSING_HOURS) {
+      if (elapsed >= CLOSING_HOURS && points && userId) {
         saveRewards({ points: points, userId: userId, reason: "mining" }).then(
           () => {
             localStorage.removeItem("rewardTimerStart");

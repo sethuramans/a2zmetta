@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from "react-redux";
-import ReferralForm from '../components/ReferralForm';
+import { Link } from "react-router-dom";
 import Header from "../components/Header";
 
 function Home() {
@@ -26,7 +26,16 @@ function Home() {
                 safer, and more transparent transactions using cryptocurrency.
               </p>
 
-              {!user && <ReferralForm />}
+              {!user && (
+                <div>
+                  <Link
+                    to="/login"
+                    className="btn btn-primary d-block mx-auto my-2"
+                  >
+                    Login
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>
